@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crisis Simulator: Bolivia Edition</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="arcade-monitor">
+        
+        <header class="hud-top">
+            <div class="branding">
+                <span class="flag">🇧🇴</span>
+                <h1 class="pixel-text">CRISIS SIMULATOR: BOLIVIA EDITION <span class="version">v1.0</span></h1>
+            </div>
+            <div class="settings-icon">⚙️</div>
+        </header>
+
+        <nav class="hud-tabs">
+            <button class="tab-btn active" onclick="cambiarPagina('gondola')">
+                <span class="tab-icon">🕹️</span>
+                <span class="tab-label">[GÓNDOLA DE SUMINISTROS]</span>
+            </button>
+            <button class="tab-btn" onclick="cambiarPagina('tablero')">
+                <span class="tab-icon">📟</span>
+                <span class="tab-label">[TABLERO DE PRECIOS]</span>
+            </button>
+            
+        </nav>
+
+        <div class="arcade-screen-content">
+            
+            <main class="panel-izquierdo">
+                
+                <section id="page-gondola" class="arcade-page active">
+    <div class="box-title">⛽ MONITOREO DE CARBURANTES Y AUTONOMÍA</div>
+    
+    <div class="gondola-dashboard-layout">
+        
+        <div class="gondola-col tanque-visual">
+            <span class="subtitulo-pixel">ESTADO DEL STOCK</span>
+            <div class="medidor-tanque-contenedor">
+                <div class="escala-tanque">
+                    <span>15k</span>
+                    <span>10k</span>
+                    <span>5k</span>
+                    <span>CRIT</span>
+                </div>
+                <div class="gauge-border-premium">
+                    <div id="fuel-bar" class="gauge-fill-premium">
+                        <div class="efecto-burbuja"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="fuel-digital-display" class="digital-counter-large">10000 L</div>
+        </div>
+
+        <div class="gondola-col controles-valvulas">
+            <span class="subtitulo-pixel">VÁLVULAS DE AJUSTE</span>
+            
+            <div class="valvula-item">
+                <label class="valvula-label">[1] DEPOSITAR EN RESERVA</label>
+                <div class="pixel-counter-premium">
+                    <button type="button" class="btn-retro-minus" onclick="modificarValor('reserva-inicial', -500)">-</button>
+                    <input type="number" id="reserva-inicial" value="10000" onchange="actualizarSimulacionCarburante()">
+                    <button type="button" class="btn-retro-plus" onclick="modificarValor('reserva-inicial', 500)">+</button>
+                </div>
+                <small class="valvula-help">Inventario disponible actual (Litros)</small>
+            </div>
+
+            <div class="valvula-item">
+                <label class="valvula-label">[2] DEMANDA / CONSUMO DIARIO</label>
+                <div class="pixel-counter-premium">
+                    <button type="button" class="btn-retro-minus" onclick="modificarValor('consumo-diario', -100)">-</button>
+                    <input type="number" id="consumo-diario" value="1200" onchange="actualizarSimulacionCarburante()">
+                    <button type="button" class="btn-retro-plus" onclick="modificarValor('consumo-diario', 100)">+</button>
+                </div>
+                <small class="valvula-help">Salida de combustible por día</small>
+            </div>
+
+            <div class="valvula-item">
+                <label class="valvula-label">[3] INGRESO / REABASTECIMIENTO</label>
+                <div class="pixel-counter-premium">
+                    <button type="button" class="btn-retro-minus" onclick="modificarValor('reabastecimiento', -50)">-</button>
+                    <input type="number" id="reabastecimiento" value="300" onchange="actualizarSimulacionCarburante()">
+                    <button type="button" class="btn-retro-plus" onclick="modificarValor('reabastecimiento', 50)">+</button>
+                </div>
+                <small class="valvula-help">Llegada de cisternas por día</small>
+            </div>
+            
+            <input type="hidden" id="nivel-critico" value="2000">
+        </div>
+
+        <div class="gondola-col flujo-analitica">
+            <span class="subtitulo-pixel">DIAGNÓSTICO RÁPIDO</span>
+            <div class="tarjeta-flujo-estado" id="contenedor-indicador-flujo">
+                <div id="icono-flujo" class="icono-flujo-grande">▼</div>
+                <div id="texto-flujo-velocidad" class="texto-flujo-datos">-900 L/DÍA</div>
+                <div id="etiqueta-flujo-estado" class="etiqueta-flujo-desc">VACIÁNDOSE</div>
+            </div>
+        </div>
+
+    </div>
+    <aside class="panel-derecho-hud">
+                <div class="hud-status-box">
+                    <div id="situacion-titulo" class="situacion-header">SITUACIÓN: Cargando...</div>
+                    <div id="situacion-cuerpo" class="situacion-body">
+                        Iniciando matriz de datos del simulador...
+                    </div>
+                </div>
+
+                <div class="casos-estudio-box">
+    <div class="mini-title">🔬 CASOS DE PRUEBA ACADÉMICOS: COMBUSTIBLE</div>
+    
+    <table class="tabla-casos-academia">
+        <thead>
+            <tr>
+                <th>ESCENARIO LOGÍSTICO</th>
+                <th>DATOS DE ENTRADA (MANUAL)</th>
+                <th>RESULTADO ESPERADO</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>⚠️ Caso 1: Consumo Estándar</strong></td>
+                <td>Inicial: 10,000L | Consumo: 1,200L | Reabast: 300L</td>
+                <td><span class="color-orange">Crítico en 9 días</span></td>
+            </tr>
+            <tr>
+                <td><strong>🛑 Caso 2: Bloqueo de Fronteras</strong></td>
+                <td>Inicial: 8,000L | Consumo: 1,500L | Reabast: 0L</td>
+                <td><span class="color-red">Crítico en 4 días</span></td>
+            </tr>
+            <tr>
+                <td><strong>✅ Caso 3: Equilibrio Operativo</strong></td>
+                <td>Inicial: 5,000L | Consumo: 1,000L | Reabast: 1,000L</td>
+                <td><span class="color-green">Sistema Estable</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+            </aside>
+</section>
+
+               
+
+    <section id="page-tablero" class="arcade-page">
+    <div class="box-title">🎛️ SIMULADOR PERSONALIZADO DE INFLACIÓN</div>
+    
+    <div class="tablero-dinamico-layout">
+        <div class="panel-inputs-arcade">
+            <span class="subtitulo-pixel">CONFIGURAR PARÁMETROS FINANCIEROS</span>
+            
+            <div class="form-group-arcade" style="margin-bottom: 15px; border-bottom: 1px dashed #2d3748; padding-bottom: 12px;">
+                <label style="color: #00a8ff; font-weight: bold;">💰 Presupuesto Mensual Disponible (Bs):</label>
+                <input type="number" id="manual-presupuesto" value="2000" min="1">
+            </div>
+
+            <div class="form-group-arcade">
+                <label>¿Qué alimento deseas evaluar?</label>
+                <input type="text" id="manual-nombre" value="Pollo" placeholder="Ej. Pollo, Carne, Leche..." oninput="actualizarIconoEnVivo()">
+            </div>
+
+            <div class="form-grid-dos-columnas">
+                <div class="form-group-arcade">
+                    <label>Precio Anterior (Bs):</label>
+                    <input type="number" id="manual-anterior" value="15" min="1">
+                </div>
+                <div class="form-group-arcade">
+                    <label>Precio Actual (Bs):</label>
+                    <input type="number" id="manual-actual" value="22" min="1">
+                </div>
+            </div>
+
+            <div class="form-group-arcade">
+                <label>Cantidad consumida al mes:</label>
+                <input type="number" id="manual-cantidad" value="4" min="1">
+            </div>
+
+            <button type="button" class="btn-calcular-arcade" onclick="calcularInflacionManual()">
+                ⚡ PROCESAR SIMULACIÓN
+            </button>
+        </div>
+
+        <div class="panel-resultados-arcade">
+            <span class="subtitulo-pixel">MONITOR DE IMPACTO EN VIVO</span>
+            
+            <div class="ticket-resultado-premium">
+                <div class="ticket-header">
+                    <span id="res-icono" class="ticket-icon">🍗</span>
+                    <div>
+                        <span id="res-nombre" class="ticket-title">POLLO</span>
+                        <small id="res-meta">Consumo: 4 unidades/mes</small>
+                    </div>
+                </div>
+                
+                <hr class="linea-separadora-arcade">
+                
+                <div class="ticket-data-row">
+                    <span>Gasto Mensual Total:</span>
+                    <span id="res-gasto-total" class="res-destacado-rojo">0 Bs</span>
+                </div>
+
+                <div class="ticket-data-row">
+                    <span>Alza del Precio (%):</span>
+                    <span id="res-porcentaje" class="res-destacado-naranja">0%</span>
+                </div>
+                
+                <div class="ticket-data-row">
+                    <span>Dinero perdido por Inflación:</span>
+                    <span id="res-perdida-pura" style="color: #ef4444; font-weight: bold;">0 Bs</span>
+                </div>
+
+                <div class="ticket-data-row" style="border-top: 1px dotted #2d3748; margin-top: 8px; padding-top: 8px;">
+                    <span>Saldo Disponible Restante:</span>
+                    <span id="res-saldo-restante" style="font-weight: bold;">0 Bs</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="casos-estudio-box" style="margin-top: 1.5rem;">
+    <span class="subtitulo-pixel">🔬 CASOS DE PRUEBA ACADÉMICOS: INFLACIÓN Y ALIMENTOS</span>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>ESCENARIO ECONÓMICO</th>
+                    <th>DATOS DE ENTRADA (MANUAL)</th>
+                    <th>RESULTADO ESPERADO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>⚠️ Caso 1: Inflación Moderada (Pollo)</strong></td>
+                    <td>Presupuesto: 2000 Bs | Ant: 15 Bs | Act: 22 Bs | Cant: 4</td>
+                    <td><span class="color-orange">Alza +46.7% | Pérdida: 28 Bs</span></td>
+                </tr>
+                <tr>
+                    <td><strong>🛑 Caso 2: Hiperinflación / Déficit (Carne)</strong></td>
+                    <td>Presupuesto: 500 Bs | Ant: 35 Bs | Act: 60 Bs | Cant: 10</td>
+                    <td><span class="color-red">Déficit: Saldo -100 Bs</span></td>
+                </tr>
+                <tr>
+                    <td><strong>✅ Caso 3: Estabilidad de Precios (Leche)</strong></td>
+                    <td>Presupuesto: 1000 Bs | Ant: 6 Bs | Act: 6 Bs | Cant: 20</td>
+                    <td><span class="color-green">Alza 0% | Saldo Seguro</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</section>
+            </main>
+        </div>
+
+        <footer class="hud-bottom-ticker">
+            <p id="marquesina-texto">SISTEMA ONLINE. SIMULACIÓN EN CURSO... DATOS REALES DE ENTORNO ECONÓMICO.</p>
+        </footer>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

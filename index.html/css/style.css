@@ -1,0 +1,511 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+:root {
+    --arcade-bg: #1a1c1e;
+    --screen-bg: #0c100e;
+    --pixel-green: #39ff14;
+    --pixel-orange: #ffb703;
+    --pixel-red: #ff3333;
+    --pixel-blue: #00f0ff;
+    --text-white: #e2e8f0;
+}
+
+/* --- ESTILOS BASE Y GENERALES --- */
+body {
+    background-color: var(--arcade-bg);
+    color: var(--text-white);
+    font-family: 'VT323', monospace;
+    font-size: 1.35rem;
+    letter-spacing: 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 15px;
+}
+
+/* MONITOR GABINETE ARCADE */
+.arcade-monitor {
+    background-color: #22252a;
+    border: 12px solid #3a3f47;
+    border-radius: 16px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 20px 40px rgba(0,0,0,0.6);
+    width: 100%;
+    max-width: 1100px;
+    padding: 15px;
+    background-image: linear-gradient(#2d3139 50%, #22252a 50%);
+    background-size: 100% 4px;
+}
+
+/* PANTALLA CRT INTERNA INTERACTIVA */
+.arcade-screen-content {
+    background-color: var(--screen-bg);
+    border: 6px solid #111;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    position: relative;
+}
+
+/* LINEAS DE ESCANEO DE MONITOR DE VIDEOJUEGO */
+.arcade-screen-content::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+    z-index: 10;
+    background-size: 100% 3px;
+    pointer-events: none;
+}
+
+/* NAVEGACIÓN POR BOTONES DEL SIMULADOR */
+.hud-tabs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.tab-btn {
+    background-color: #1f2326;
+    border: 3px solid #4a5568;
+    border-radius: 6px;
+    color: #a0aec0;
+    padding: 10px;
+    font-family: 'VT323', monospace;
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.tab-btn.active {
+    background-color: #142319;
+    border: 3px solid var(--pixel-green);
+    color: var(--pixel-green);
+    box-shadow: 0 0 12px rgba(57, 255, 20, 0.4);
+    transform: scale(1.02);
+}
+
+.arcade-page { 
+    display: none; 
+    width: 100%;
+}
+.arcade-page.active { 
+    display: block; 
+}
+
+/* REPARTO DE PANELES (FLEXBOX DINÁMICO) */
+.panel-izquierdo {
+    flex: 1.3;
+    min-width: 300px;
+    background-color: rgba(0,0,0,0.3);
+    border: 2px solid #2d3748;
+    border-radius: 6px;
+    padding: 15px;
+}
+
+.panel-derecho-hud {
+    flex: 0.9;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.box-title {
+    color: var(--pixel-orange);
+    font-size: 1.6rem;
+    border-bottom: 2px dashed #2d3748;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+/* CONTROLES ESTÁNDAR DE BOTONES +/- */
+.control-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(255,255,255,0.02);
+    padding: 6px 10px;
+    margin-bottom: 8px;
+    border: 1px solid #1e293b;
+}
+
+.pixel-counter { 
+    display: flex; 
+    background-color: #000; 
+    border: 2px solid #4a5568; 
+}
+.pixel-counter button {
+    background-color: #2d3748; 
+    color: white; 
+    border: none;
+    width: 32px; 
+    height: 32px; 
+    font-size: 1.4rem; 
+    cursor: pointer;
+}
+.pixel-counter button:hover { 
+    background-color: var(--pixel-orange); 
+    color: black; 
+}
+.pixel-counter input, .pixel-input {
+    background-color: transparent; 
+    border: none; 
+    color: var(--pixel-green);
+    width: 75px; 
+    text-align: center; 
+    font-family: 'VT323', monospace; 
+    font-size: 1.35rem;
+}
+.pixel-input { 
+    border: 2px solid #4a5568; 
+    background-color: #000; 
+    width: 100px; 
+}
+
+/* --- SECCIÓN 1: GÓNDOLA DE SUMINISTROS (DIÉSEL) --- */
+.gondola-dashboard-layout {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: stretch;
+    margin-top: 15px;
+}
+
+.gondola-col {
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid #232d3f;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.tanque-visual { flex: 0.8; align-items: center; justify-content: center; }
+.controles-valvulas { flex: 1.4; gap: 14px; }
+.flujo-analitica { flex: 0.8; justify-content: center; text-align: center; }
+
+.subtitulo-pixel {
+    font-size: 1.1rem;
+    color: var(--pixel-blue);
+    text-shadow: 0 0 5px rgba(0, 240, 255, 0.4);
+    margin-bottom: 15px;
+    text-align: center;
+    border-bottom: 1px solid #232d3f;
+    padding-bottom: 5px;
+}
+
+.medidor-tanque-contenedor {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 160px;
+}
+
+.escala-tanque {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    font-size: 0.9rem;
+    color: #4b5563;
+    text-align: right;
+}
+
+.gauge-border-premium {
+    width: 60px;
+    height: 100%;
+    border: 3px solid #475569;
+    background-color: #05070a;
+    border-radius: 6px;
+    padding: 3px;
+    display: flex;
+    align-items: flex-end;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.9);
+}
+
+.gauge-fill-premium {
+    width: 100%;
+    background: linear-gradient(to top, #15803d, var(--pixel-green));
+    box-shadow: 0 0 15px var(--pixel-green);
+    border-radius: 3px;
+    transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.digital-counter-large {
+    margin-top: 15px;
+    font-size: 1.8rem;
+    background: #000;
+    border: 2px solid var(--pixel-green);
+    color: var(--pixel-green);
+    padding: 2px 15px;
+    border-radius: 4px;
+    box-shadow: 0 0 8px rgba(57, 255, 20, 0.2);
+}
+
+.valvula-item { display: flex; flex-direction: column; gap: 4px; }
+.valvula-label { font-size: 1.1rem; color: #cbd5e1; }
+.valvula-help { font-size: 0.85rem; color: #64748b; }
+
+.pixel-counter-premium {
+    display: flex;
+    background-color: #000;
+    border: 2px solid #334155;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.pixel-counter-premium button {
+    background-color: #1e293b;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 35px;
+    font-size: 1.5rem;
+    font-family: 'VT323', monospace;
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.pixel-counter-premium button:hover { background-color: var(--pixel-orange); color: black; }
+.pixel-counter-premium input { flex: 1; text-align: center; background: transparent; border: none; color: var(--pixel-green); font-size: 1.4rem; font-family: 'VT323'; }
+
+.tarjeta-flujo-estado {
+    padding: 20px 10px;
+    border-radius: 6px;
+    background: #090d16;
+    border: 2px solid #1e293b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.icono-flujo-grande { font-size: 3rem; line-height: 1; }
+.texto-flujo-datos { font-size: 1.7rem; font-weight: bold; }
+.etiqueta-flujo-desc { font-size: 1.1rem; letter-spacing: 2px; }
+
+.flujo-vaciando { border-color: var(--pixel-red) !important; color: var(--pixel-red); text-shadow: 0 0 10px rgba(255,51,51,0.3); }
+.flujo-llenando { border-color: var(--pixel-green) !important; color: var(--pixel-green); text-shadow: 0 0 10px rgba(57,255,20,0.3); }
+
+/* --- SECCIÓN 2: TABLERO DE PRECIOS E INFLACIÓN --- */
+/* =======================================================
+   📊 EXTENSIÓN RESPONSIVA Y CORRECCIÓN DE ESTILOS
+   ======================================================= */
+
+/* Contenedor flexible de doble columna */
+.tablero-dinamico-layout {
+    display: flex;
+    flex-direction: column; /* Celulares primero: apilado vertical */
+    gap: 1.5rem;
+    width: 100%;
+    margin-top: 1rem;
+}
+/* El ticket de resultados adaptado con un tono papel real y letras oscuras */
+.ticket-resultado-premium {
+    background-color: #fffdeb; /* 💡 Cambiado a color papel/hueso retro para que ya no sea blanco puro */
+    border: 1px solid #cbd5e1;  /* Borde gris un poco más marcado */
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Sombra un poco más profunda para que "flote" */
+    color: #1e293b; /* 💡 Texto gris oscuro/negro de alta intensidad para que nada se vea plomo */
+}
+
+/* Forzar que los textos dentro del encabezado del ticket sean oscuros */
+.ticket-header small {
+    color: #475569; /* Gris oscuro nítido para la meta de consumo */
+    font-size: 0.9rem;
+}
+
+/* Filas de datos del ticket (Textos principales en negro) */
+.ticket-data-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e2e8f0; /* Línea divisoria interna sutil */
+    font-size: 1rem;
+    color: #1e293b; /* Asegura el contraste oscuro en cada fila */
+}
+
+/* Corrección de colores destacados para que resalten sobre el fondo crema */
+.res-destacado-rojo {
+    color: #991b1b !important; /* Rojo oscuro quemado de alta legibilidad */
+    font-weight: bold;
+}
+
+.res-destacado-naranja {
+    color: #c2410c !important; /* Naranja oscuro quemado */
+    font-weight: bold;
+}
+
+/* =======================================================
+   💻 MEDIA QUERY: AJUSTES PARA TABLETS Y COMPUTADORAS
+   ======================================================= */
+@media (min-width: 768px) {
+    .tablero-dinamico-layout {
+        flex-direction: row; /* En PC/Tablet se ponen uno al lado del otro */
+        align-items: flex-start;
+    }
+
+    .panel-inputs-arcade {
+        flex: 1.2; /* El panel de inputs es ligeramente más ancho */
+    }
+
+    .panel-resultados-arcade {
+        flex: 0.8; /* El ticket de resultados es más compacto */
+    }
+
+    .form-grid-dos-columnas {
+        grid-template-columns: 1fr 1fr; /* En PC los precios van lado a lado */
+    }
+}
+
+/* Evitar que los inputs se desborden de sus cajas */
+.form-group-arcade input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px;
+    font-size: 1.1rem;
+}
+.ticket-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.ticket-icon { font-size: 2.5rem; }
+.ticket-title { font-size: 2rem; font-weight: bold; color: #080101; text-transform: uppercase; display: block; }
+.ticket-meta { color: #080808; font-size: 1.90rem; }
+
+.ticket-data-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 2rem;
+    margin: 8px 0;
+    color: #00070f;
+}
+
+.res-destacado-rojo { font-size: 1.6rem; color: var(--pixel-red); font-weight: bold; }
+.res-destacado-naranja { font-size: 1.6rem; color: var(--pixel-orange); font-weight: bold; }
+
+/* --- SECCIÓN 3: INFORME FINANCIERO DEL HOGAR --- */
+.budget-controls-box {
+    background: rgb(18, 18, 19);
+    border: 2px solid #1e293b;
+    border-radius: 6px;
+    padding: 20px;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.control-row-arcade {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 12px 15px;
+    border-radius: 4px;
+    border-left: 4px solid var(--pixel-blue, #3b82f6);
+}
+
+.label-with-icon {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pixel-icon { font-size: 1.3rem; }
+
+.control-label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #cbd5e1;
+    letter-spacing: 0.5px;
+}
+
+.input-arcade-container {
+    display: flex;
+    align-items: center;
+    background: #020408;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    padding-right: 10px;
+}
+
+.pixel-input-premium {
+    background: transparent;
+    border: none;
+    padding: 8px 12px;
+    color: #fff;
+    font-size: 1.2rem;
+    font-family: 'VT323', monospace; /* Forzado de tipografía arcade */
+    font-weight: bold;
+    width: 100px;
+    text-align: right;
+}
+
+.pixel-input-premium:focus { outline: none; }
+.currency-tag { color: #64748b; font-weight: bold; font-size: 0.9rem; margin-left: 5px; }
+
+.btn-auditoria-arcade {
+    width: 100%;
+    background: #0f172a;
+    border: 2px solid var(--pixel-blue, #3b82f6);
+    color: var(--pixel-blue, #3b82f6);
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    font-family: 'VT323', monospace;
+    margin-top: 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.btn-auditoria-arcade:hover {
+    background: var(--pixel-blue, #3b82f6);
+    color: #000;
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+}
+
+/* --- HUD LATERAL DE DIAGNÓSTICO (DERECHO) --- */
+.hud-status-box { background-color: #0f1310; border: 2px solid #1c2e24; padding: 15px; flex: 1; }
+.situacion-header { color: var(--pixel-orange); border-bottom: 1px dashed #1c2e24; padding-bottom: 4px; }
+.casos-estudio-box { background-color: #1a1e24; border: 2px solid #2d3748; padding: 12px; }
+.mini-title { color: var(--pixel-blue); font-size: 1.15rem; margin-bottom: 5px; }
+.casos-lista { list-style: none; font-size: 1.05rem; color: #94a3b8; }
+
+.critical-highlight { color: var(--pixel-red); font-weight: bold; }
+.stable-highlight { color: var(--pixel-green); }
+
+/* TICKER INFERIOR (MARQUESINA MARQUEE) */
+.hud-bottom-ticker { background-color: #000; padding: 6px; overflow: hidden; white-space: nowrap; width: 100%; }
+.hud-bottom-ticker p { display: inline-block; color: var(--pixel-green); animation: tickerLoop 25s linear infinite; margin: 0; }
+@keyframes tickerLoop {
+    0% { transform: translate3d(100%, 0, 0); }
+    100% { transform: translate3d(-100%, 0, 0); }
+}
+
+/* --- CONTROL INTELIGENTE DE VISIBILIDAD DE HUD --- */
+/* CORREGIDO: Ajustado para mantener la coherencia de Flexbox y evitar roturas visuales */
+.juego-container.ocultar-hud .panel-derecho-hud {
+    display: none;
+}
+.juego-container.ocultar-hud .panel-izquierdo {
+    flex: 2; /* Toma todo el ancho de la pantalla CRT de forma fluida */
+}
